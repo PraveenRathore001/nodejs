@@ -1,20 +1,24 @@
-const env = require("dotenv").config();
-const express = require('express')
+const express = require('express');
+const bodyParser = require('body-parser');
+require('dotenv').config()
+const userRoutes = require('./routes/userRoute')
+const mongoose = require('mongoose');
 
-// const mongoose=require('mongoose');
-// mongoose.set('strictQuery', true);
-const app = express();
+mongoose.set('strictQuery', true);
 
-// mongoose.connect(process.env.url).then(()=>{
-//     console.log("mongoose connected successfully");
-// }).catch((err)=>{
-//     console.log("hii not connected")
-// })
-// const routerdata = require('./routes/Routess');
-// app.use('/',routerdata)
-
+mongoose.connect(process.env.MONGO_URL).then(()=>{
+console.log('Connect to Mongo successfully')
+}).catch((err)=>{
+    console.log(`Error is ${err}`)
+})
 
 
-app.listen(process.env.port,()=>{
-    console.log(`listening on port ${process.env.port}`);
+const app=express();
+app.use(express.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/user',userRoutes);
+
+app.listen(process.env.port,() =>{
+    console.log(`app listening on port ${process.env.port}`);
 })
